@@ -18,7 +18,12 @@ module.exports = {
       "8xl": "3800px"
     },
     extend: {
-      colors: {},
+      colors: {
+        "lottie-lavender": "#c0b3f4",
+        "chiper-chartreuse": "#beee4b", //apple
+        "gigabyte-green": "#5cdf95", //minat
+        "analytics-azule": "#103944",
+      },
     },
     // 3840x2160 4k
     // 2048×1080 2k
