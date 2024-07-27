@@ -11,5 +11,6 @@
   "errorPassword": "Пароль должен быть 8-32 символа",
   "errorPasswordConfirm": "Пароли не совпадают",
   "signIn": "Войти",
-  "forgotPassword": "Забыли пароль?"
+  "forgotPassword": "Забыли пароль?",
+  "homePage": "Главная страница"
 }

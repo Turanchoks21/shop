@@ -11,5 +11,6 @@
   "errorPassword": "Password must be 8-32 characters",
   "errorPasswordConfirm": "Passwords don't match",
   "signIn": "Sing in",
-  "forgotPassword": "Forgot your password?"
+  "forgotPassword": "Forgot your password?",
+  "homePage": "Home page"
 }
