@@ -1,7 +1,13 @@
+import { Outlet } from "react-router-dom";
+import NavBar from "./components/navigations/NavBar";
+
 function App() {
   return (
     <>
-      <div className="flex justify-center text-3xl pt-10 text-blue-600 font-bold">zczxc</div>
+      <NavBar />
+      <div className="m-0 px-5 lg:px-48">
+        <Outlet />
+      </div>
     </>
   );
 }
