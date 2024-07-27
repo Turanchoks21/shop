@@ -43,15 +43,14 @@ function RegisterView() {
     validationSchema: RegisterSchema,
     onSubmit: (values) => {
       console.log(values);
-      // Здесь можно добавить логику отправки данных на сервер
     },
   });
 
   return (
     <FormWraper>
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={formik.handleSubmit} className="py-2">
         <div
-          className="text-2xl lg:text-3xl xxl:text-5xl pt-2 xxl:pt-0 pb-3 font-semibold
+          className="text-center text-2xl lg:text-3xl xxl:text-5xl pt-2 xxl:pt-0 pb-3 font-semibold
           text-chiper-chartreuse"
         >
           {t("register")}
@@ -106,7 +105,7 @@ function RegisterView() {
         </div>
         <div className="pt-4 w-full flex flex-col gap-6">
           <SolidButton type="submit">{t("createProfile")}</SolidButton>
-          <SolidButton to="/login">{t("signUp")}</SolidButton>
+          <SolidButton to="/login">{t("signIn")}</SolidButton>
         </div>
       </form>
     </FormWraper>
