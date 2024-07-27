@@ -9,5 +9,7 @@
   "errorNick": "Никнейм должен быть 3-16 символа",
   "invalidEmail": "Неправильный email",
   "errorPassword": "Пароль должен быть 8-32 символа",
-  "errorPasswordConfirm": "Пароли не совпадают"
+  "errorPasswordConfirm": "Пароли не совпадают",
+  "signIn": "Войти",
+  "forgotPassword": "Забыли пароль?"
 }

@@ -9,5 +9,7 @@
   "errorNick": "Nickname must be 3-16 characters",
   "invalidEmail": "Invalid email",
   "errorPassword": "Password must be 8-32 characters",
-  "errorPasswordConfirm": "Passwords don't match"
+  "errorPasswordConfirm": "Passwords don't match",
+  "signIn": "Sing in",
+  "forgotPassword": "Forgot your password?"
 }
