@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import NavButton from "../buttons/NavButton";
-import { Bars3Icon } from "@heroicons/react/20/solid";
+import {
+  Bars3Icon,
+  ArrowRightEndOnRectangleIcon,
+} from "@heroicons/react/20/solid";
 import Logo from "../Logo";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
@@ -28,7 +31,7 @@ function NavBar() {
   return (
     <>
       <div
-        className="fixed items-center top-0 left-0 z-10 w-full mx-auto px-2 xxl:py-5 sm:px-6 lg:px-56 
+        className="fixed items-center top-0 left-0 z-10 w-full mx-auto px-2 xxl:py-5 md:px-6 2lg:px-56 
       bg-analytics-azule
       border-blue-purple transition-color ease-in-out duration-500
       text-white
@@ -49,13 +52,17 @@ function NavBar() {
             </div>
             <div className="hidden sm:block sm:ml-6">
               <div className="flex justify-center items-center space-x-4">
-                <NavButton to="/register">{t("register")}</NavButton>
-                <NavButton to="/login">{t("login")}</NavButton>
+                <NavButton>Игровые ключи</NavButton>
+                <NavButton>Аккаунты</NavButton>
+                <NavButton>Предметы</NavButton>
               </div>
             </div>
           </div>
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             <div className="flex space-x-3">
+              <Link to="/login">
+                <ArrowRightEndOnRectangleIcon className="h-8 text-chiper-chartreuse" />
+              </Link>
               <button
                 className="text-xl font-semibold text-chiper-chartreuse"
                 onClick={changeLanguage}
@@ -86,12 +93,9 @@ function NavBar() {
               <NavButton to="/" onClick={toggleMenu}>
                 {t("homePage")}
               </NavButton>
-              <NavButton to="/register" onClick={toggleMenu}>
-                {t("register")}
-              </NavButton>
-              <NavButton to="/login" onClick={toggleMenu}>
-                {t("login")}
-              </NavButton>
+              <NavButton>Игровые ключи</NavButton>
+              <NavButton>Аккаунты</NavButton>
+              <NavButton>Предметы</NavButton>
             </div>
           </div>
         </div>
