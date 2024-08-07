@@ -1,17 +1,21 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import FormWraper from "../components/wrapers/forms/FormWraper";
 import FormInput from "../components/inputs/FormInput";
 import EyeButton from "../components/buttons/EyeButton";
 import SolidButton from "../components/buttons/SolidButton";
+import LoadingBlockWave from "../components/ui/LoadingBlockWave";
 
 function RegisterView() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [type, setType] = useState("password");
+  const [loading, setLoading] = useState(false);
 
   const RegisterSchema = Yup.object().shape({
     username: Yup.string()
@@ -33,6 +37,16 @@ function RegisterView() {
     setType((prevType) => (prevType === "password" ? "text" : "password"));
   }
 
+  useEffect(() => {
+    const storedUsers = localStorage.getItem("users");
+    if (storedUsers) {
+      const users = JSON.parse(storedUsers);
+      if (users.length > 0) {
+        navigate("/");
+      }
+    }
+  }, [navigate]);
+
   const formik = useFormik({
     initialValues: {
       username: "",
@@ -41,8 +55,45 @@ function RegisterView() {
       passwordConfirm: "",
     },
     validationSchema: RegisterSchema,
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: async (values, { setSubmitting }) => {
+      setLoading(true);
+      try {
+        const formData = new FormData();
+        formData.append("userName", values.username);
+        formData.append("userEmail", values.email);
+        formData.append("userPassword", values.password);
+
+        const response = await fetch("/api/User/Registration", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+          },
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error("Error response from server:", errorText);
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+
+        if (data === false) {
+          throw new Error("Registration failed. Server returned false.");
+        }
+
+        console.log(data);
+        navigate("/login");
+      } catch (error) {
+        console.error(
+          "There was a problem with the registration request:",
+          error
+        );
+      } finally {
+        setSubmitting(false);
+        setLoading(false);
+      }
     },
   });
 
@@ -65,16 +116,16 @@ function RegisterView() {
           >
             {t("username")}
           </FormInput>
+          <FormInput
+            name="email"
+            id="email"
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            error={formik.errors.email}
+          >
+            Email
+          </FormInput>
           <div>
-            <FormInput
-              name="email"
-              id="email"
-              value={formik.values.email}
-              onChange={formik.handleChange}
-              error={formik.errors.email}
-            >
-              Email
-            </FormInput>
             <div className="absolute right-0 bottom-[5.7rem]">
               <EyeButton
                 onClick={togglePasswordVisible}
@@ -104,8 +155,10 @@ function RegisterView() {
           </FormInput>
         </div>
         <div className="pt-4 w-full flex flex-col gap-6">
-          <SolidButton type="submit">{t("createProfile")}</SolidButton>
-          <SolidButton to="/login">{t("signIn")}</SolidButton>
+          <SolidButton type="submit" disabled={loading}>
+            {loading ? <LoadingBlockWave /> : t("createProfile")}
+          </SolidButton>
+          <SolidButton to="/login">{t("iHaveAProfile")}</SolidButton>
         </div>
       </form>
     </FormWraper>
