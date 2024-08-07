@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import NavButton from "../buttons/NavButton";
 import {
   Bars3Icon,
   ArrowRightEndOnRectangleIcon,
+  UserIcon,
 } from "@heroicons/react/20/solid";
 import Logo from "../Logo";
 import { Link } from "react-router-dom";
@@ -12,6 +13,17 @@ import clsx from "clsx";
 function NavBar() {
   const { t, i18n } = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isUserLogined, setIsUserLogined] = useState(false);
+
+  useEffect(() => {
+    const storedUsers = localStorage.getItem("users");
+    if (storedUsers) {
+      const users = JSON.parse(storedUsers);
+      if (users.length > 0) {
+        setIsUserLogined(true);
+      }
+    }
+  }, []);
 
   function toggleMenu() {
     setIsMenuOpen(!isMenuOpen);
@@ -52,17 +64,24 @@ function NavBar() {
             </div>
             <div className="hidden sm:block sm:ml-6">
               <div className="flex justify-center items-center space-x-4">
-                <NavButton>Игровые ключи</NavButton>
-                <NavButton>Аккаунты</NavButton>
-                <NavButton>Предметы</NavButton>
+                <NavButton>{t("gameKeys")}</NavButton>
+                <NavButton>{t("accounts")}</NavButton>
+                <NavButton>{t("items")}</NavButton>
               </div>
             </div>
           </div>
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             <div className="flex space-x-3">
-              <Link to="/login">
-                <ArrowRightEndOnRectangleIcon className="h-8 text-chiper-chartreuse" />
-              </Link>
+              {isUserLogined ? (
+                <Link to="/profile">
+                  <UserIcon className="h-8 text-chiper-chartreuse" />
+                </Link>
+              ) : (
+                <Link to="/login">
+                  <ArrowRightEndOnRectangleIcon className="h-8 text-chiper-chartreuse" />
+                </Link>
+              )}
+
               <button
                 className="text-xl font-semibold text-chiper-chartreuse"
                 onClick={changeLanguage}
