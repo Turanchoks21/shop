@@ -1,19 +1,35 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useUsers } from "../context/UserContext";
 import FormWraper from "../components/wrapers/forms/FormWraper";
 import FormInput from "../components/inputs/FormInput";
 import EyeButton from "../components/buttons/EyeButton";
 import SolidButton from "../components/buttons/SolidButton";
+import LoadingBlockWave from "../components/ui/LoadingBlockWave";
 
-function RegisterView() {
+function LoginView() {
   const { t } = useTranslation();
-
+  const navigate = useNavigate();
+  const { addUser } = useUsers();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [type, setType] = useState("password");
+  const [loading, setLoading] = useState(false);
 
-  const RegisterSchema = Yup.object().shape({
+
+  useEffect(() => {
+    const storedUsers = localStorage.getItem("users");
+    if (storedUsers) {
+      const users = JSON.parse(storedUsers);
+      if (users.length > 0) {
+        navigate("/");
+      }
+    }
+  }, [navigate]);
+
+  const LoginSchema = Yup.object().shape({
     username: Yup.string()
       .required(t("emptyField"))
       .min(3, t("errorNick"))
@@ -34,9 +50,42 @@ function RegisterView() {
       username: "",
       password: "",
     },
-    validationSchema: RegisterSchema,
-    onSubmit: (values) => {
-      console.log(values);
+    validationSchema: LoginSchema,
+    onSubmit: async (values, { setSubmitting }) => {
+      setLoading(true);
+      try {
+        const queryParams = new URLSearchParams({
+          userName: values.username,
+          userPassword: values.password,
+        });
+
+        const response = await fetch(`/api/User/Login/?${queryParams}`, {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error("Error response from server:", errorText);
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+
+        if (data === false) {
+          throw new Error("Login failed. Server returned false.");
+        }
+
+        addUser(values.username);
+        navigate("/");
+      } catch (error) {
+        console.error("There was a problem with the login request:", error);
+      } finally {
+        setSubmitting(false);
+        setLoading(false);
+      }
     },
   });
 
@@ -77,7 +126,9 @@ function RegisterView() {
           </div>
         </div>
         <div className="pt-4 w-full flex flex-col gap-6">
-          <SolidButton type="submit">{t("signIn")}</SolidButton>
+          <SolidButton type="submit" disabled={loading}>
+            {loading ? <LoadingBlockWave /> : t("signIn")}
+          </SolidButton>
           <SolidButton to="/register">{t("createProfile")}</SolidButton>
         </div>
       </form>
@@ -93,4 +144,4 @@ function RegisterView() {
   );
 }
 
-export default RegisterView;
+export default LoginView;
