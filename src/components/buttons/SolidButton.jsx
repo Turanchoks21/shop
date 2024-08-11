@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-function SolidButton({ children, type, to }) {
+function SolidButton({ children, type, to, onClick }) {
   if (to) {
     return (
       <>
@@ -23,6 +23,7 @@ function SolidButton({ children, type, to }) {
         transition-all ease-in-out duration-300 hover:bg-gigabyte-green 
         font-semibold text-2xl bg-chiper-chartreuse w-full p-2 rounded-lg"
         type={type}
+        onClick={onClick}
       >
         {children}
       </button>
