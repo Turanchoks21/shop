@@ -8,7 +8,7 @@ function NavButton({ children, to }) {
           to={to}
           className="text-chiper-chartreuse font-semibold text-lg px-1 transition-all 
             ease-in-out duration-100 hover:bg-clip-text hover:bg-gradient-to-r hover:from-gigabyte-green 
-          hover:via-lottie-lavender hover:to-chiper-chartreuse hover:text-transparent
+            hover:via-lottie-lavender hover:to-chiper-chartreuse hover:text-transparent
             hover:font-semibold hover:-translate-y-[2px]"
         >
           {children}
@@ -20,7 +20,7 @@ function NavButton({ children, to }) {
   return (
     <>
       <button
-        className="text-chiper-chartreuse font-semibold text-lg px-1 transition-all 
+        className=" text-chiper-chartreuse font-semibold text-lg px-1 transition-all 
           ease-in-out duration-100 hover:bg-clip-text hover:bg-gradient-to-r hover:from-gigabyte-green 
         hover:via-lottie-lavender hover:to-chiper-chartreuse hover:text-transparent
           hover:font-semibold hover:-translate-y-[2px]"
