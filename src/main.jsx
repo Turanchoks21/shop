@@ -3,10 +3,14 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import "./i18n";
+import { UsersProvider } from "./context/UserContext.jsx";
+import { CartProvider } from "./context/CartContext.jsx";
 import App from "./App.jsx";
 import HomeView from "./views/HomeView.jsx";
 import LoginView from "./views/LoginView.jsx";
 import RegisterView from "./views/RegisterView.jsx";
+import OrderPaymentView from "./views/OrderPaymentView.jsx";
+import FavoriteView from "./views/FavoriteView.jsx";
 
 const router = createBrowserRouter([
   {
@@ -25,12 +29,24 @@ const router = createBrowserRouter([
         path: "register",
         element: <RegisterView />,
       },
+      {
+        path: "order",
+        element: <OrderPaymentView />,
+      },
+      {
+        path: "favorite",
+        element: <FavoriteView />,
+      },
     ],
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <CartProvider>
+      <UsersProvider>
+        <RouterProvider router={router} />
+      </UsersProvider>
+    </CartProvider>
   </React.StrictMode>
 );
