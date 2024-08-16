@@ -8,6 +8,7 @@ import FormInput from "../components/inputs/FormInput";
 import EyeButton from "../components/buttons/EyeButton";
 import SolidButton from "../components/buttons/SolidButton";
 import LoadingBlockWave from "../components/ui/LoadingBlockWave";
+import ErrorModal from "../components/modals/ErrorModal";
 
 function RegisterView() {
   const { t } = useTranslation();
@@ -16,6 +17,7 @@ function RegisterView() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [type, setType] = useState("password");
   const [loading, setLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const RegisterSchema = Yup.object().shape({
     username: Yup.string()
@@ -63,7 +65,7 @@ function RegisterView() {
         formData.append("userEmail", values.email);
         formData.append("userPassword", values.password);
 
-        const response = await fetch("/api/User/Registration", {
+        const response = await fetch("http://8ybg5l.realhost-free.net/User/Registration", {
           method: "POST",
           headers: {
             Accept: "application/json",
@@ -71,25 +73,18 @@ function RegisterView() {
           body: formData,
         });
 
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error("Error response from server:", errorText);
-          throw new Error("Network response was not ok");
+        if (response.ok) {
+          const text = await response.text();
+          const data = text ? JSON.parse(text) : {};
+          console.log(data);
+          navigate("/login");
+        } else {
+          console.error("Ошибка регистрации:", response.statusText);
+          setIsModalOpen(true);
         }
-
-        const data = await response.json();
-
-        if (data === false) {
-          throw new Error("Registration failed. Server returned false.");
-        }
-
-        console.log(data);
-        navigate("/login");
       } catch (error) {
-        console.error(
-          "There was a problem with the registration request:",
-          error
-        );
+        console.error("Произошла ошибка при отправке запроса:", error);
+        setIsModalOpen(true);
       } finally {
         setSubmitting(false);
         setLoading(false);
@@ -161,6 +156,9 @@ function RegisterView() {
           <SolidButton to="/login">{t("iHaveAProfile")}</SolidButton>
         </div>
       </form>
+      <ErrorModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        {t("registrationError")}
+      </ErrorModal>
     </FormWraper>
   );
 }

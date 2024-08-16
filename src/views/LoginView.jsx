@@ -9,6 +9,7 @@ import FormInput from "../components/inputs/FormInput";
 import EyeButton from "../components/buttons/EyeButton";
 import SolidButton from "../components/buttons/SolidButton";
 import LoadingBlockWave from "../components/ui/LoadingBlockWave";
+import ErrorModal from "../components/modals/ErrorModal";
 
 function LoginView() {
   const { t } = useTranslation();
@@ -17,7 +18,7 @@ function LoginView() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [type, setType] = useState("password");
   const [loading, setLoading] = useState(false);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const storedUsers = localStorage.getItem("users");
@@ -59,27 +60,33 @@ function LoginView() {
           userPassword: values.password,
         });
 
-        const response = await fetch(`/api/User/Login/?${queryParams}`, {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-          },
-        });
+        const response = await fetch(
+          `http://8ybg5l.realhost-free.net/User/Login/?${queryParams}`,
+          {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+            },
+          }
+        );
 
-        if (!response.ok) {
+        if (response.status === 200) {
+          const data = await response.json();
+
+          if (data === false) {
+            throw new Error("Login failed. Server returned false.");
+          }
+
+          addUser(values.username);
+          localStorage.setItem("username", values.username);
+          navigate("/");
+        } else if (response.status === 500) {
+          setIsModalOpen(true);
+        } else {
           const errorText = await response.text();
           console.error("Error response from server:", errorText);
-          throw new Error("Network response was not ok");
+          throw new Error("Unexpected server response");
         }
-
-        const data = await response.json();
-
-        if (data === false) {
-          throw new Error("Login failed. Server returned false.");
-        }
-
-        addUser(values.username);
-        navigate("/");
       } catch (error) {
         console.error("There was a problem with the login request:", error);
       } finally {
@@ -90,57 +97,62 @@ function LoginView() {
   });
 
   return (
-    <FormWraper>
-      <form onSubmit={formik.handleSubmit} className="py-2">
-        <div
-          className="text-center text-2xl lg:text-3xl xxl:text-5xl pt-2 xxl:pt-0 pb-3 font-semibold
+    <>
+      <ErrorModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        {t("loginError")}
+      </ErrorModal>
+      <FormWraper>
+        <form onSubmit={formik.handleSubmit} className="py-2">
+          <div
+            className="text-center text-2xl lg:text-3xl xxl:text-5xl pt-2 xxl:pt-0 pb-3 font-semibold
           text-chiper-chartreuse"
-        >
-          {t("login")}
-        </div>
-        <div className="w-full relative">
-          <FormInput
-            name="username"
-            id="username"
-            value={formik.values.username}
-            onChange={formik.handleChange}
-            error={formik.errors.username}
           >
-            {t("username")}
-          </FormInput>
-          <FormInput
-            type={type}
-            name="password"
-            value={formik.values.password}
-            id="password"
-            onChange={formik.handleChange}
-            error={formik.errors.password}
-          >
-            {t("password")}
-          </FormInput>
-          <div className="absolute right-0 bottom-[1.7rem]">
-            <EyeButton
-              onClick={togglePasswordVisible}
-              isPasswordVisible={isPasswordVisible}
-            />
+            {t("login")}
           </div>
-        </div>
-        <div className="pt-4 w-full flex flex-col gap-6">
-          <SolidButton type="submit" disabled={loading}>
-            {loading ? <LoadingBlockWave /> : t("signIn")}
-          </SolidButton>
-          <SolidButton to="/register">{t("createProfile")}</SolidButton>
-        </div>
-      </form>
-      <button
-        type="button"
-        className="text-center font-medium text-xl text-chiper-chartreuse 
-        hover:bg-clip-text hover:bg-gradient-to-r from-gigabyte-green via-lottie-lavender 
+          <div className="w-full relative">
+            <FormInput
+              name="username"
+              id="username"
+              value={formik.values.username}
+              onChange={formik.handleChange}
+              error={formik.errors.username}
+            >
+              {t("username")}
+            </FormInput>
+            <FormInput
+              type={type}
+              name="password"
+              value={formik.values.password}
+              id="password"
+              onChange={formik.handleChange}
+              error={formik.errors.password}
+            >
+              {t("password")}
+            </FormInput>
+            <div className="absolute right-0 bottom-[1.7rem]">
+              <EyeButton
+                onClick={togglePasswordVisible}
+                isPasswordVisible={isPasswordVisible}
+              />
+            </div>
+          </div>
+          <div className="pt-4 w-full flex flex-col gap-6">
+            <SolidButton type="submit" disabled={loading}>
+              {loading ? <LoadingBlockWave /> : t("signIn")}
+            </SolidButton>
+            <SolidButton to="/register">{t("createProfile")}</SolidButton>
+          </div>
+        </form>
+        <button
+          type="button"
+          className="text-center font-medium text-xl text-chiper-chartreuse 
+          hover:bg-clip-text hover:bg-gradient-to-r from-gigabyte-green via-lottie-lavender 
         to-chiper-chartreuse hover:text-transparent transition-all ease-in-out duration-300"
-      >
-        {t("forgotPassword")}
-      </button>
-    </FormWraper>
+        >
+          {t("forgotPassword")}
+        </button>
+      </FormWraper>
+    </>
   );
 }
 
