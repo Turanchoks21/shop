@@ -23,6 +23,8 @@ export function UsersProvider({ children }) {
     localStorage.removeItem("users");
   }
 
+  
+
   return (
     <UsersContext.Provider value={{ users, addUser, clearUsers }}>
       {children}
