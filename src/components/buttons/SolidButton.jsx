@@ -6,6 +6,7 @@ function SolidButton({ children, type, to, onClick }) {
       <>
         <Link
           to={to}
+          onClick={onClick}
           className="flex justify-center items-center text-analytics-azule 
           transition-all ease-in-out duration-300 hover:bg-gigabyte-green 
           font-semibold text-2xl bg-chiper-chartreuse w-full p-2 rounded-lg"

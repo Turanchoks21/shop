@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
 
-function NavButton({ children, to }) {
+function NavButton({ children, to, onClick }) {
   if (to) {
     return (
       <>
         <Link
           to={to}
+          onClick={onClick}
           className="text-chiper-chartreuse font-semibold text-lg px-1 transition-all 
             ease-in-out duration-100 hover:bg-clip-text hover:bg-gradient-to-r hover:from-gigabyte-green 
             hover:via-lottie-lavender hover:to-chiper-chartreuse hover:text-transparent
@@ -20,6 +21,7 @@ function NavButton({ children, to }) {
   return (
     <>
       <button
+        onClick={onClick}
         className=" text-chiper-chartreuse font-semibold text-lg px-1 transition-all 
           ease-in-out duration-100 hover:bg-clip-text hover:bg-gradient-to-r hover:from-gigabyte-green 
         hover:via-lottie-lavender hover:to-chiper-chartreuse hover:text-transparent
