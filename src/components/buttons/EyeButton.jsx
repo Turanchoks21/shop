@@ -2,7 +2,7 @@ import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 function EyeButton({ onClick, isPasswordVisible }) {
   return (
-    <div
+    <button
       onClick={onClick}
       className="text-chiper-chartreuse hover:text-chiper-chartreuse/60 cursor-pointer"
     >
@@ -11,7 +11,7 @@ function EyeButton({ onClick, isPasswordVisible }) {
       ) : (
         <EyeSlashIcon className="h-7" />
       )}
-    </div>
+    </button>
   );
 }
 
