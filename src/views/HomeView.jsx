@@ -34,7 +34,7 @@ function HomeView() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "http://8ybg5l.realhost-free.net/Product/GetAllProductsInfo",
+          "https://8ybg5l.realhost-free.net/Product/GetAllProductsInfo",
           {
             method: "GET",
             headers: {
