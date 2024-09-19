@@ -35,5 +35,7 @@
   "replenishmentAmount": "Replenishment amount",
   "favorite": "Favorite",
   "history": "History",
-  "logout": "Logout"
+  "logout": "Logout",
+  "amount": "Replenishment amount",
+  "replenish": "Replenish"
 }

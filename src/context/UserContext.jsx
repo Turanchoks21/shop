@@ -15,15 +15,13 @@ export function UsersProvider({ children }) {
   }, [users]);
 
   function addUser(user) {
-    setUsers((prevUsers) => [...prevUsers, user]);
+    setUsers([user]);
   }
 
   function clearUsers() {
     setUsers([]);
     localStorage.removeItem("users");
   }
-
-  
 
   return (
     <UsersContext.Provider value={{ users, addUser, clearUsers }}>

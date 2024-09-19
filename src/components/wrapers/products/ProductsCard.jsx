@@ -22,13 +22,13 @@ function ProductCard({
   const { addToCart } = useContext(CartContext);
   const [isFavorite, setIsFavorite] = useState(false);
   const { users } = useUsers();
-  const username = users;
-
+  const username = users.length > 0 ? users[0] : null; 
   useEffect(() => {
     const checkIfFavorite = async () => {
+      if (!username) return;
       try {
         const response = await axios.get(
-          `http://8ybg5l.realhost-free.net/Favorite/GetUserFavorites?userName=${username}`
+          `https://8ybg5l.realhost-free.net/Favorite/GetUserFavorites?userName=${username}`
         );
         if (response.status === 200) {
           const favorites = response.data;
@@ -79,7 +79,7 @@ function ProductCard({
 
     try {
       const response = await axios.post(
-        `http://8ybg5l.realhost-free.net/Favorite/AddNewFavorite?userName=${username}&productName=${name}`,
+        `https://8ybg5l.realhost-free.net/Favorite/AddNewFavorite?userName=${username}&productName=${name}`,
         null
       );
       if (response.status === 200) {
@@ -110,19 +110,25 @@ function ProductCard({
             {game}
           </div>
         </div>
-        <div
-          onClick={toggleFavorite}
-          className="absolute right-5 top-5 hover:scale-110"
-        >
-          {isFavorite ? (
-            <StarSolid className="h-8 text-yellow-300" />
-          ) : (
-            <StarOutline className="h-8 text-yellow-300" />
-          )}
-        </div>
+
+        {username && (
+          <div
+            onClick={toggleFavorite}
+            className="absolute right-5 top-5 hover:scale-110"
+          >
+            {isFavorite ? (
+              <StarSolid className="h-8 text-yellow-300" />
+            ) : (
+              <StarOutline className="h-8 text-yellow-300" />
+            )}
+          </div>
+        )}
 
         <div className="h-56 w-56 border m-4 rounded-lg flex justify-center items-center">
-          image
+          <img
+            className="h-56 w-56 rounded-lg"
+            src={`https://8ybg5l.realhost-free.net/Product/GetImage?productId=${id}`}
+          />
         </div>
         <div className="px-5 pb-5">
           <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white overflow-hidden text-ellipsis whitespace-nowrap">

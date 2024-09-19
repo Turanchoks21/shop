@@ -35,5 +35,7 @@
   "replenishmentAmount": "Сумма пополнения",
   "favorite": "Избранное",
   "history": "История",
-  "logout": "Выход"
+  "logout": "Выход",
+  "amount": "Cумма пополнения",
+  "replenish": "Пополнить"
 }

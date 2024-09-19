@@ -61,7 +61,7 @@ function LoginView() {
         });
 
         const response = await fetch(
-          `http://8ybg5l.realhost-free.net/User/Login/?${queryParams}`,
+          `https://8ybg5l.realhost-free.net/User/Login/?${queryParams}`,
           {
             method: "GET",
             headers: {

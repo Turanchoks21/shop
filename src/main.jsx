@@ -11,6 +11,7 @@ import LoginView from "./views/LoginView.jsx";
 import RegisterView from "./views/RegisterView.jsx";
 import OrderPaymentView from "./views/OrderPaymentView.jsx";
 import FavoriteView from "./views/FavoriteView.jsx";
+import HistoryView from "./views/HistoryView.jsx";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: "favorite",
         element: <FavoriteView />,
+      },
+      {
+        path: "history",
+        element: <HistoryView />,
       },
     ],
   },

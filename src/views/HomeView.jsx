@@ -34,7 +34,7 @@ function HomeView() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `${process.env.API_URL}/Product/GetAllProductsInfo`,
+          `https://8ybg5l.realhost-free.net/Product/GetAllProductsInfo`,
           {
             method: "GET",
             headers: {
@@ -79,7 +79,7 @@ function HomeView() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)} // Обновление состояния поиска
         />
-        <div className="space-x-4 flex">
+        <div className="space-x-4 flex text-xs xl:text-base">
           <button
             className={`text-analytics-azule font-semibold hover:scale-110 ${
               selectedGame === "Brawlhalla" ? "underline" : ""

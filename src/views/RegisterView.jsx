@@ -65,7 +65,7 @@ function RegisterView() {
         formData.append("userEmail", values.email);
         formData.append("userPassword", values.password);
 
-        const response = await fetch("http://8ybg5l.realhost-free.net/User/Registration", {
+        const response = await fetch("https://8ybg5l.realhost-free.net/User/Registration", {
           method: "POST",
           headers: {
             Accept: "application/json",

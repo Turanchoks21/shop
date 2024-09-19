@@ -29,7 +29,10 @@ function ProductInCart({ id, name, price }) {
     <div className="bg-white rounded-lg w-full flex justify-between p-4">
       <div className="flex space-x-4">
         <div className="h-20 w-20 border flex justify-center items-center">
-          Image
+          <img
+            className="h-20 w-20"
+            src={`https://8ybg5l.realhost-free.net/Product/GetImage?productId=${id}`}
+          />
         </div>
         <div className="flex flex-col">
           <span>{name}</span>

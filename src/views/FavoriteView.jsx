@@ -12,7 +12,7 @@ function FavoriteView() {
     const fetchFavoriteProducts = async () => {
       try {
         const response = await axios.get(
-          `http://8ybg5l.realhost-free.net/Favorite/GetUserFavorites?userName=${username}`
+          `https://8ybg5l.realhost-free.net/Favorite/GetUserFavorites?userName=${username}`
         );
 
         if (response.status === 200) {
@@ -21,7 +21,7 @@ function FavoriteView() {
           );
 
           const productResponse = await axios.get(
-            "http://8ybg5l.realhost-free.net/Product/GetAllProductsInfo"
+            "https://8ybg5l.realhost-free.net/Product/GetAllProductsInfo"
           );
 
           if (productResponse.status === 200) {

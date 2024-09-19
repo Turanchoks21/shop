@@ -1,27 +1,83 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
+import axios from "axios";
 import { useTranslation } from "react-i18next";
 import NavButton from "../buttons/NavButton";
 import {
   Bars3Icon,
-  ArrowRightOnRectangleIcon,
   ShoppingCartIcon,
 } from "@heroicons/react/20/solid";
 import Logo from "../Logo";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
+import FlyoutMenu from "../ui/FlyoutMenu";
 import CartModal from "../modals/CartModal";
 import { CartContext } from "../../context/CartContext";
 import { useUsers } from "../../context/UserContext";
+import AccountReplenishmentModal from "../modals/AccountReplenishmentModal";
 
-function NavBar() {
+function UserNavBar() {
   const { t, i18n } = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isUserLogined, setIsUserLogined] = useState(false);
   const [isReplenishmentModal, setIsReplenishmentModal] = useState(false);
   const [balance, setBalance] = useState(null);
+  const userMenuRef = useRef(null);
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
   const { cart, getTotalItemCount } = useContext(CartContext);
   const { users } = useUsers();
   const username = users.length > 0 ? users[0] : "Guest";
+
+  useEffect(() => {
+    const storedUsers = localStorage.getItem("users");
+    if (storedUsers) {
+      const users = JSON.parse(storedUsers);
+      if (users.length > 0) {
+        setIsUserLogined(true);
+      }
+    }
+
+    if (username && username !== "Guest") {
+      const fetchBalance = async () => {
+        try {
+          const response = await axios.get(
+            `https://8ybg5l.realhost-free.net/Payment/GetWalletCount?userName=${username}`
+          );
+          if (response.status === 200) {
+            setBalance(response.data);
+          }
+        } catch (error) {
+          console.error("Error fetching balance:", error);
+        }
+      };
+
+      fetchBalance();
+    }
+
+    window.addEventListener("storage", handleStorageChange);
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [username]);
+
+  const handleStorageChange = () => {
+    const storedUsers = localStorage.getItem("users");
+    if (storedUsers) {
+      const users = JSON.parse(storedUsers);
+      setIsUserLogined(users.length > 0);
+    } else {
+      setIsUserLogined(false);
+    }
+  };
+
+  const handleClickOutside = (event) => {
+    if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+      setIsUserMenuOpen(false);
+    }
+  };
 
   function toggleMenu() {
     setIsMenuOpen(!isMenuOpen);
@@ -68,12 +124,25 @@ function NavBar() {
                 <Logo />
               </Link>
             </div>
+            <div className="hidden sm:block sm:ml-6">
+              <div className="flex justify-center items-center space-x-4">
+                <NavButton
+                  onClick={() => {
+                    toggleReplenishmentModal();
+                  }}
+                >
+                  {t("accountReplenishment")}
+                </NavButton>
+                <NavButton to="favorite">{t("favorite")}</NavButton>
+                <NavButton to="history">{t("history")}</NavButton>
+              </div>
+            </div>
           </div>
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             <div className="flex space-x-3 items-center">
-              <Link to="/login">
-                <ArrowRightOnRectangleIcon className="h-8 text-chiper-chartreuse" />
-              </Link>
+              <div className="hidden pt-2 2lg:flex justify-between ">
+                <FlyoutMenu balance={balance} />
+              </div>
               <button onClick={toggleCartModal} className="relative">
                 <ShoppingCartIcon className="h-7 text-chiper-chartreuse" />
                 {getTotalItemCount() > 0 && (
@@ -110,7 +179,8 @@ function NavBar() {
             <div className="w-full" />
             <div className="flex w-full flex-col items-center gap-y-4">
               <div className="border-b w-full p-2 text-chiper-chartreuse">
-                <div className="flex justify-end ">
+                <div className="flex justify-between ">
+                  <span>{username}</span>
                   <button
                     className="text-xl font-semibold text-chiper-chartreuse"
                     onClick={changeLanguage}
@@ -118,9 +188,27 @@ function NavBar() {
                     {i18n.language.toUpperCase()}
                   </button>
                 </div>
+                <div className="flex space-x-2">
+                  <span>{t("balance")}:</span>
+                  <span>{balance !== null ? `${balance}` : "Loading..."}</span>
+                </div>
               </div>
               <NavButton to="/" onClick={toggleMenu}>
                 {t("homePage")}
+              </NavButton>
+              <NavButton
+                onClick={() => {
+                  toggleReplenishmentModal();
+                  toggleMenu();
+                }}
+              >
+                {t("accountReplenishment")}
+              </NavButton>
+              <NavButton to="favorite" onClick={toggleMenu}>
+                {t("favorite")}
+              </NavButton>
+              <NavButton to="history" onClick={toggleMenu}>
+                {t("history")}
               </NavButton>
             </div>
           </div>
@@ -130,8 +218,12 @@ function NavBar() {
         isOpen={isCartModalOpen}
         onClose={() => setIsCartModalOpen(false)}
       />
+      <AccountReplenishmentModal
+        isOpen={isReplenishmentModal}
+        onClose={() => setIsReplenishmentModal(false)}
+      />
     </>
   );
 }
 
-export default NavBar;
+export default UserNavBar;

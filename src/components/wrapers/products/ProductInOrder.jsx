@@ -8,7 +8,10 @@ function ProductInOrder({ id, name, category, price, imageId, count }) {
     <div className="flex justify-between rounded-lg shadow-xl p-2">
       <div className="flex space-x-4">
         <div className="h-32 w-32 border rounded-lg flex justify-center items-center">
-          Image
+          <img
+            className="h-32 w-32 rounded-lg"
+            src={`https://8ybg5l.realhost-free.net/Product/GetImage?productId=${id}`}
+          />
         </div>
         <div className="flex flex-col">
           <div>{name}</div>
